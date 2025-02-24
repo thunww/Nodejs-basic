@@ -38,20 +38,30 @@ const handleUpdateUser  = async (req,res) =>{
     })
 }
 
-const createUser = async (req,res) =>{
-    const {username, password, email } = req.body; // Lấy dữ liệu từ form
-    if(!username || !password || !email){
-        return res.status(400).json({
-            message: 'Missing information User'
-        })
+const createUser = async (req, res) => {
+    const { username, password, email } = req.body;
+
+    if (!username || !password || !email) {
+        return res.status(400).json({ message: 'Missing information User' });
     }
-    const result = await createUserService(username,password,email);
-    return res.status(201).json({
-        message: 'Create users',
-        data: result
-    })
-    
-}
+
+    try {
+        const result = await createUserService(username, password, email);
+
+        return res.status(201).json({
+            message: 'User created successfully',
+            data: result
+        });
+    } catch (err) {
+        console.error('Create user error:', err);
+
+        if (err.code === 'ER_DUP_ENTRY') {
+            return res.status(409).json({ message: 'Email already exists' });
+        }
+
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 module.exports = {
     handleAllUsers,
