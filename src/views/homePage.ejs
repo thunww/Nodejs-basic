@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" href="/">Home</a>
+        <a class="active" href="/create">Create Users</a>
+        <a class="active" href="/list">List Users</a>
+    </div>
+
+    <div class="container">
+        <h1>HELLO! WELCOME TO WEBSITE!!!!</h1>
+
+        <% if (listUsers && listUsers.length > 0) { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% listUsers.forEach((user) => { %>
+                        <tr>
+                            <td><%= user.id %></td>
+                            <td><%= user.username %></td>
+                            <td><%= user.email %></td>  
+                            <td>
+                                <a href="/update/<%= user.id %>" class="btn edit">Edit</a>
+                                <form action="/delete/<%= user.id %>" method="POST" class="inline-form">
+                                    <button type="submit" class="btn delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No users found.</p>
+        <% } %>
+    </div>
+</body>
+</html>

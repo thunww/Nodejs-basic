@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cập nhật người dùng</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/create">Create User</a>
+        <a class="active" href="#">Edit User</a>
+    </div>
+
+    <div class="form-container">
+        <h2>Chỉnh sửa người dùng</h2>
+        <form action="/update/<%= user.id %>" method="POST">
+            <label>Username</label>
+            <input type="text" name="username" value="<%= user.username %>" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Nhập password mới">
+
+            <label>Email</label>
+            <input type="email" name="email" value="<%= user.email %>" required>
+
+            <button type="submit">Cập nhật</button>
+        </form>
+    </div>
+</body>
+</html>
