@@ -40,6 +40,7 @@ const handleUpdateUser  = async (req,res) =>{
 }
 
 const createUser = async (req, res) => {
+    
     const { username, password, email } = req.body;
 
     if (!username || !password || !email) {

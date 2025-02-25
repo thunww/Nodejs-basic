@@ -1,13 +1,10 @@
-const mysql = require('mysql2/promise');
+const { Sequelize } = require('sequelize');
 
-const connection = mysql.createPool({
-    host: process.env.DB_HOST,      // Địa chỉ máy chủ MySQL
-    user: process.env.DB_USER,           // Tên đăng nhập MySQL
-    password: process.env.DB_PASSWORD, // Mật khẩu của bạn
-    database: process.env.DB_DATABASE , // Tên cơ sở dữ liệu
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0  
-  });
+// Thay đổi các thông tin dưới đây theo cấu hình của bạn
+const sequelize = new Sequelize('nodejs', 'root', 'root', {
+  host: 'localhost',
+  dialect: 'mysql', // thay bằng 'postgres', 'sqlite', 'mssql' nếu cần
+  logging: false,   // tắt log nếu không muốn hiển thị quá nhiều thông tin
+});
 
-  module.exports = connection;
+module.exports = sequelize;
