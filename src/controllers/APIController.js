@@ -1,27 +1,35 @@
 const connection = require('../config/database');
 const {getAllUsers, createUserService, getUserId, updateUser,deleteUser} = require('../services/CRUDServices');
 
-const handleAllUsers = async (req,res) =>{
-    let results = await getAllUsers();
-    return res.status(200).json({
-        message : 'ok',
-        data: results
-    })
-}
-
-const handleDeleteUser = async (req,res) => {
-    const userId = req.params.id;
-    const results = await deleteUser(userId);
-    if(!userId){
-        return res.status(400).json({
-            message: 'Missing user ID'
-        })
+const handleAllUsers = async (req, res) => {
+    try {
+      const results = await getAllUsers();
+      return res.status(200).json({ message: 'ok', data: results });
+    } catch (err) {
+      console.error('Error fetching users:', err);
+      return res.status(500).json({ message: 'Internal server error' });
     }
-    return res.status(200).json({
-        message: 'user delete',
-        data: results
-    })
-}
+  };
+  
+  const handleDeleteUser = async (req, res) => {
+    const userId = req.params.id;
+  
+    if (!userId) {
+      return res.status(400).json({ message: 'Missing user ID' });
+    }
+  
+    try {
+      const results = await deleteUser(userId);
+      if (!results) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      return res.status(200).json({ message: 'User deleted', data: results });
+    } catch (err) {
+      console.error('Delete user error:', err);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
 const handleUpdateUser  = async (req,res) =>{
     const userId = req.params.id;
     const {username, password, email} = req.body;
