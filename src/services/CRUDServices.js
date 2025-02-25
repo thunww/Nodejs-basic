@@ -1,41 +1,71 @@
-const connection = require('../config/database')
-
-const getAllUsers =  async () =>{
-    let [results, fields] = await connection.query('SELECT * FROM users');
-    //console.log(results);
+const { User } = require('../models');
+const { Sequelize } = require('sequelize');
+// Lấy tất cả người dùng
+const getAllUsers = async () => {
+  try {
+    const results = await User.findAll();
     return results;
-}
-const createUserService = async (username,password,email) =>{
-    let[results,fields] = await connection.query('INSERT INTO users (username, password, email) VALUES (?, ?, ?)',[username,password,email])
-    console.log('Người dùng đã được thêm:', results);
-    return results;
-}
+  } catch (error) {
+    console.error('Error fetching all users:', error);
+    throw error;
+  }
+};
 
-const getUserId = async (id) =>{
-    let [results, fields] = await connection.query('SELECT * FROM users where id = ?',[id])
-    console.log(results);
-    return results[0];
-}
+// Tạo người dùng mới
+const createUserService = async (username, password, email) => {
+  try {
+    const newUser = await User.create({ username, password, email });
+    console.log('Người dùng đã được thêm:', newUser);
+    return newUser;
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
+};
+
+// Lấy người dùng theo id
+const getUserId = async (id) => {
+  try {
+    const user = await User.findByPk(id);
+    console.log(user);
+    return user;
+  } catch (error) {
+    console.error('Error fetching user by id:', error);
+    throw error;
+  }
+};
+
+// Cập nhật thông tin người dùng
 const updateUser = async (id, username, password, email) => {
-    const [results] = await connection.query(
-        'UPDATE users SET username = ?, password = ?, email = ? WHERE id = ?',
-        [username, password, email, id]
+  try {
+    const [affectedRows] = await User.update(
+      { username, password, email },
+      { where: { id } }
     );
-    console.log('Người dùng đã được cập nhật:', results);
-    return results; // Trả về kết quả để biết có cập nhật thành công không
+    console.log('Người dùng đã được cập nhật:', affectedRows);
+    return affectedRows;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
 };
 
+// Xóa người dùng
 const deleteUser = async (id) => {
-    const [results] = await connection.query('DELETE FROM users WHERE id = ?', [id]);
-    console.log('Xóa người dùng:', results);
-    return results; // Trả về kết quả để kiểm tra affectedRows
+  try {
+    const affectedRows = await User.destroy({ where: { id } });
+    console.log('Xóa người dùng:', affectedRows);
+    return affectedRows;
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
+  }
 };
-
 
 module.exports = {
-    getAllUsers,
-    createUserService,
-    getUserId,
-    updateUser,
-    deleteUser
-}
+  getAllUsers,
+  createUserService,
+  getUserId,
+  updateUser,
+  deleteUser
+};
