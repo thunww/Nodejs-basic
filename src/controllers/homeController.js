@@ -1,6 +1,6 @@
 const connection = require('../config/database');
 const {getAllUsers, createUserService, getUserId, updateUser,deleteUser} = require('../services/CRUDServices');
-
+const hashPassword = require('../utils/hashPassword');
 
 const getHomepage = async (req,res) => {
    let results = await getAllUsers();
@@ -12,7 +12,8 @@ const getCreate = (req,res) =>{
 }
 const createUser = async (req,res) =>{
     const {username, password, email } = req.body; // Lấy dữ liệu từ form
-    await createUserService(username,password,email);
+    let  hashed = hashPassword(password);
+    await createUserService(username,hashed,email);
     res.redirect('/');
 }
 const editUser = async (req,res) =>{
