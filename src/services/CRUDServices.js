@@ -35,6 +35,18 @@ const getUserId = async (id) => {
   }
 };
 
+const getUserEmail = async (email) => {
+  try {
+      const user = await User.findOne({
+          where: { email },  // Tìm user theo email
+      });
+      return user; // Trả về user nếu tìm thấy, null nếu không có
+  } catch (error) {
+      console.error("Lỗi truy vấn user:", error);
+      throw error;
+  }
+};
+
 // Cập nhật thông tin người dùng
 const updateUser = async (id, username, password, email) => {
   try {
@@ -67,5 +79,6 @@ module.exports = {
   createUserService,
   getUserId,
   updateUser,
-  deleteUser
+  deleteUser,
+  getUserEmail
 };

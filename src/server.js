@@ -7,7 +7,11 @@ const hostname = process.env.HOST_NAME;
 const configViewEngine = require('./config/viewengine')
 const webRoutes = require('./routers/web')
 const connection = require('./config/database');
+const configCORS = require('./config/cors');
 const initAPIRoute = require('./routers/api');
+
+//config cors
+configCORS(app);
 //config template engine
 configViewEngine(app);
 
@@ -15,8 +19,7 @@ configViewEngine(app);
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 //khai bao route
-app.use('/', webRoutes);
-
+//app.use('/', webRoutes);
 initAPIRoute(app);
 
 app.listen(port, hostname, () => {
