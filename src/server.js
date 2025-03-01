@@ -1,27 +1,16 @@
-const express = require('express')
-require('dotenv').config();
-const path = require('path')
-const app = express()
-const port = process.env.PORT || 8888 ;
-const hostname = process.env.HOST_NAME;
-const configViewEngine = require('./config/viewengine')
-const webRoutes = require('./routers/web')
-const connection = require('./config/database');
-const configCORS = require('./config/cors');
-const initAPIRoute = require('./routers/api');
+const dotenv = require("dotenv");
+const sequelize = require("./config/database");
+const app = require("./app");
 
-//config cors
-configCORS(app);
-//config template engine
-configViewEngine(app);
+dotenv.config();
 
-
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-//khai bao route
-//app.use('/', webRoutes);
-initAPIRoute(app);
-
-app.listen(port, hostname, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// Kết nối database & chạy server
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Database connected");
+    app.listen(8080, () => console.log("Server running on port 8080"));
+  })
+  .catch((err) => {
+    console.error("Database connection error:", err);
+  });
